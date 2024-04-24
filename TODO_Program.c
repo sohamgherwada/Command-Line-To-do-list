@@ -68,39 +68,48 @@ int main() {
     char task[100];
     plan();
     while (1) {
-        int status = scanf("%d", &choice);
-        if (status != 1) {
-            printf("Invalid choice\n");
-            while (getchar() != '\n');
-            continue;
-        } else {
-            switch (choice) {
-                case 1:
-                    printf("Enter the task: ");
-                    scanf("%s", task);
-                    add(task);
-                    break;
-                case 2:
-                    printf("Enter the task: ");
-                    scanf("%s", task);
-                    delete(task);
-                    break;
-                case 3:
-                    printf("Tasks:\n");
-                    print();
-                    break;
-                case 4:
-                    exit(0);
-                default:
-                    printf("Invalid choice\n");
+        scanf("%d", &choice);
+    
+        switch (choice) {
+            case 1:
+                printf("Enter the task: ");
+                fflush(stdin); // Clear the input buffer
+                fgets(task, sizeof(task), stdin);
+                task[strcspn(task, "\n")] = '\0'; // Remove the newline character from the input
+                add(task);
+                break;
+            case 2:
+                printf("Enter the task: ");
+                fflush(stdin); // Clear the input buffer
+                fgets(task, sizeof(task), stdin);
+                task[strcspn(task, "\n")] = '\0'; // Remove the newline character from the input
+                delete(task);
+                break;
+            case 3:
+                printf("Tasks:\n");
+                print();
+                break;
+            case 4: {
+                struct Node* cur = head;
+                while (cur != NULL) {
+                    struct Node* temp = cur;
+                    cur = cur->next;
+                    free(temp->data);
+                    free(temp);
+                }
+                head = NULL;
+                exit(0);
             }
+            default:
+                printf("Invalid choice\n");
         }
+        
         plan();
     }
     return 0;
 }
 void plan() {
-    printf("\n1. Add a task\n");
+    printf("1. Add a task\n");
     printf("2. Delete a task\n");
     printf("3. Print the tasks\n");
     printf("4. Exit\n");
